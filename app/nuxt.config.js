@@ -43,7 +43,10 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    '@nuxtjs/axios',
+    '@nuxtjs/auth',
+    '@nuxtjs/apollo'
   ],
   /*
   ** vuetify module configuration
@@ -74,6 +77,34 @@ export default {
     ** You can extend webpack config here
     */
     extend (config, ctx) {
+    }
+  },
+  /*
+  ** 追加
+  */
+  server: {
+    port: 3030
+  },
+  axios: {
+    baseURL: 'http://localhost:3000/'
+  },
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: 'signin', method: 'post', propertyName: 'jwt' },
+          user: false,
+          logout: false
+        }
+      }
+    }
+  },
+  apollo: {
+    clientConfigs: {
+      default: {
+        httpEndpoint: 'http://localhost:3000/graphql',
+        getAuth: () => ''
+      }
     }
   }
 }
