@@ -3,33 +3,41 @@
   v-container
     v-row
       v-col(cols=12)
-        v-card.pa-4.mx-auto(max-width=400)
-          h1.text-center ログイン
-          v-form(
-            ref="form"
-            v-model="valid"
-            lazy-validation
-            @submit.prevent="login"
+        v-card.mx-auto(max-width=400)
+          v-toolbar(
+            color="primary"
+            dark
+            flat
           )
-            v-text-field(
-              v-model="email"
-              label="メールアドレス"
-              :rules="[v => !!v || 'メールアドレスを入力してください。']"
-              required
+            v-toolbar-title ログイン
+          v-card-text
+            v-form(
+              ref="form"
+              v-model="valid"
+              lazy-validation
+              @submit.prevent="login"
             )
-            v-text-field(
-              type="password"
-              v-model="password"
-              label="パスワード"
-              :rules="[v => !!v || 'パスワードを入力してください。']"
-              required
-            )
-            .text-center
-              v-btn(
-                type="submit"
-                color="primary"
-                depressed
-              ) ログイン
+              v-text-field(
+                v-model="email"
+                label="メールアドレス"
+                :rules="[v => !!v || 'メールアドレスを入力してください。']"
+                required
+              )
+              v-text-field(
+                type="password"
+                v-model="password"
+                label="パスワード"
+                :rules="[v => !!v || 'パスワードを入力してください。']"
+                required
+              )
+              v-card-actions
+                v-spacer
+                v-btn(
+                  type="submit"
+                  color="primary"
+                  depressed
+                ) ログイン
+                v-spacer
   v-snackbar(
     v-model="snackbar.show"
     top
