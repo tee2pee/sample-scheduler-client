@@ -94,7 +94,7 @@ export default {
     strategies: {
       local: {
         endpoints: {
-          login: { url: 'signin', method: 'post', propertyName: 'jwt' },
+          login: { url: 'login', method: 'post', propertyName: 'jwt' },
           user: false,
           logout: false
         }
