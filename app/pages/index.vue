@@ -9,6 +9,7 @@
             ref="form"
             v-model="valid"
             lazy-validation
+            @submit.prevent="login"
           )
             v-text-field(
               v-model="email"
@@ -25,7 +26,7 @@
             )
             .text-center
               v-btn(
-                @click="login"
+                type="submit"
                 color="primary"
                 depressed
               ) ログイン
@@ -37,24 +38,26 @@
 
 <script>
 export default {
-}
-</script>
-
-<script>
-export default {
-  data: () => ({
-    valid: true,
-    email: '',
-    password: '',
-    snackbar: {
-      show: false,
-      text: '',
+  middleware ({ store, redirect }) {
+    if (store.state.auth.loggedIn) {
+      return redirect('/mypage')
     }
-  }),
+  },
+  data () {
+    return {
+      valid: true,
+      email: '',
+      password: '',
+      snackbar: {
+        show: false,
+        text: ''
+      }
+    }
+  },
   methods: {
-    async login() {
+    async login () {
       if (!this.$refs.form.validate()) {
-        return;
+        return false
       }
       try {
         await this.$auth.loginWith('local', {
