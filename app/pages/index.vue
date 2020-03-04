@@ -151,6 +151,9 @@ export default {
       }
     }
   },
+  created () {
+    this.$nuxt.$emit('setPageTitle', 'ログイン')
+  },
   methods: {
     async loginCore (email, password) {
       try {

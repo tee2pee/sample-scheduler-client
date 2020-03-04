@@ -72,7 +72,7 @@ export default {
   data () {
     return {
       // ページタイトル
-      title: 'Vuetify.js',
+      title: '',
       // サイドバー表示ステータス
       sidebar: this.isLaptop,
       // dummy
@@ -92,6 +92,9 @@ export default {
         */
       ]
     }
+  },
+  created () {
+    this.$nuxt.$on('setPageTitle', (title) => { this.title = title })
   },
   computed: {
     isLoggedIn () {

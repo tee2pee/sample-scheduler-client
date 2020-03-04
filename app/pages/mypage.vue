@@ -205,6 +205,7 @@ export default {
     }
   },
   created () {
+    this.$nuxt.$emit('setPageTitle', 'マイページ')
     this.mountMyInfo()
   },
   methods: {
