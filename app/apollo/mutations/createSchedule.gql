@@ -1,0 +1,21 @@
+mutation (
+  $calendarId: Int!,
+  $frDatetime: ISO8601DateTime!,
+  $toDatetime: ISO8601DateTime!,
+  $title: String!
+) {
+  createSchedule (
+    calendarId: $calendarId,
+    schedule: {
+      frDatetime: $frDatetime,
+      toDatetime: $toDatetime,
+      title: $title
+    }
+  ) {
+    id
+    calendarId
+    frDatetime
+    toDatetime
+    title
+  }
+}

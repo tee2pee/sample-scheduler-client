@@ -1,0 +1,15 @@
+mutation (
+  $scheduleId: Int!,
+  $calendarId: Int!
+) {
+  deleteSchedule (
+    scheduleId: $scheduleId,
+    calendarId: $calendarId
+  ) {
+    id
+    calendarId
+    frDatetime
+    toDatetime
+    title
+  }
+}

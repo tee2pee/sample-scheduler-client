@@ -1,0 +1,11 @@
+query {
+  myInfo {
+    id
+    name
+    email
+    calendars {
+      id
+      title
+    }
+  }
+}

@@ -22,6 +22,7 @@
                 label="メールアドレス"
                 :rules="[v => !!v || 'メールアドレスを入力してください。']"
                 required
+                prepend-icon="mdi-account"
               )
               v-text-field(
                 type="password"
@@ -29,6 +30,7 @@
                 label="パスワード"
                 :rules="[v => !!v || 'パスワードを入力してください。']"
                 required
+                prepend-icon="mdi-lock"
               )
               v-card-actions
                 v-spacer
@@ -47,15 +49,19 @@
 <script>
 export default {
   middleware ({ store, redirect }) {
+    // 既にログイン済みの場合、マイページへ遷移
     if (store.state.auth.loggedIn) {
       return redirect('/mypage')
     }
   },
   data () {
     return {
+      // フォームバリデーション
       valid: true,
+      // 入力項目
       email: '',
       password: '',
+      // スナックバー
       snackbar: {
         show: false,
         text: ''
@@ -64,10 +70,12 @@ export default {
   },
   methods: {
     async login () {
+      // バリデーションNGの場合、処理終了
       if (!this.$refs.form.validate()) {
         return false
       }
       try {
+        // Knockログイン
         await this.$auth.loginWith('local', {
           data: {
             auth: {
@@ -76,9 +84,12 @@ export default {
             }
           }
         })
+        // ApolloにJWTトークン設定
         await this.$apolloHelpers.onLogin(this.$auth.getToken('local').match(/^Bearer\s+(.+)$/i)[1])
+        // マイページへ遷移
         this.$router.push('/mypage')
       } catch (e) {
+        // ログイン失敗
         this.snackbar.text = 'ログインに失敗しました。'
         this.snackbar.show = true
         // window.console.log(e)

@@ -1,0 +1,15 @@
+query(
+  $fr: ISO8601DateTime!,
+  $to: ISO8601DateTime!
+) {
+  mySchedules (
+    fr: $fr,
+    to: $to
+  ) {
+    id
+    calendarId
+    frDatetime
+    toDatetime
+    title
+  }
+}

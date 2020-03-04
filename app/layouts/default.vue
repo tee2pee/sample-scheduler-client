@@ -1,101 +1,84 @@
-<template>
-  <v-app dark>
-    <v-navigation-drawer
-      v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
+<template lang="pug">
+  v-app
+    v-navigation-drawer(
+      v-model="sidebar"
+      :mobile-break-point="this.$vuetify.breakpoint.thresholds.sm"
+      clipped
       fixed
       app
-    >
-      <v-list>
-        <v-list-item
+      v-if="!isLoginPage"
+    )
+      v-list
+        v-list-item(
           v-for="(item, i) in items"
           :key="i"
           :to="item.to"
           router
           exact
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-app-bar
-      :clipped-left="clipped"
+        )
+          v-list-item-action
+            v-icon {{ item.icon }}
+          v-list-item-content
+            v-list-item-title(
+              v-text="item.title"
+            )
+    v-app-bar(
+      clipped-left
       fixed
       app
-    >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title" />
-      <v-spacer />
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
-    </v-app-bar>
-    <v-content>
-      <v-container>
-        <nuxt />
-      </v-container>
-    </v-content>
-    <v-navigation-drawer
-      v-model="rightDrawer"
-      :right="right"
-      temporary
+    )
+      v-app-bar-nav-icon(
+        @click.stop="sidebar = !sidebar"
+        v-if="!isLoginPage && !isLaptop"
+      )
+      v-spacer(
+        v-if="!isLaptop"
+      )
+      v-toolbar-title(
+        v-text="title"
+      )
+      v-spacer
+      v-menu(
+        left
+        bottom
+        v-if="!isLoginPage"
+      )
+        template(
+          v-slot:activator="{ on }"
+        )
+          v-btn(
+            icon
+            v-on="on"
+          )
+            v-icon mdi-dots-vertical
+        v-list
+          v-list-item(
+            v-if="isLoggedIn"
+            @click="logout()"
+          )
+            v-list-item-title ログアウト
+    v-content
+      v-container
+        nuxt
+    v-footer(
       fixed
-    >
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light>
-              mdi-repeat
-            </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-footer
-      :fixed="fixed"
       app
-    >
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
-  </v-app>
+    )
+      .text-center &copy; {{ new Date().getFullYear() }}
 </template>
 
 <script>
 export default {
   data () {
     return {
-      clipped: false,
-      drawer: false,
-      fixed: false,
+      // ページタイトル
+      title: 'Vuetify.js',
+      // サイドバー表示ステータス
+      sidebar: this.isLaptop,
+      // dummy
       items: [
+        // FIXME: カレンダー
+        /*
         {
           icon: 'mdi-apps',
           title: 'Welcome',
@@ -106,11 +89,35 @@ export default {
           title: 'Inspire',
           to: '/inspire'
         }
-      ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Vuetify.js'
+        */
+      ]
+    }
+  },
+  computed: {
+    isLoggedIn () {
+      return this.$store.state.auth.loggedIn
+    },
+    isLoginPage () {
+      // ログインページ判定
+      return this.$route.path === '/'
+    },
+    isLaptop () {
+      // ラップトップ画面判定
+      return this.$vuetify.breakpoint.mdAndUp
+    }
+  },
+  methods: {
+    async logout () {
+      try {
+        // Knockログアウト
+        await this.$auth.logout()
+        // ApolloからJWTトークンを削除
+        await this.$apolloHelpers.onLogout()
+        // ログインページへ遷移
+        this.$router.push('/')
+      } catch (e) {
+        // window.console.log(e)
+      }
     }
   }
 }
