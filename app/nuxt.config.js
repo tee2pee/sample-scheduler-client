@@ -1,3 +1,4 @@
+require('dotenv').config()
 import colors from 'vuetify/es5/util/colors'
 
 export default {
@@ -46,7 +47,8 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/axios',
     '@nuxtjs/auth',
-    '@nuxtjs/apollo'
+    '@nuxtjs/apollo',
+    '@nuxtjs/dotenv'
   ],
   /*
   ** vuetify module configuration
@@ -88,7 +90,7 @@ export default {
     port: 3030
   },
   axios: {
-    baseURL: 'http://localhost:3000/'
+    baseURL: process.env.SERVER_ENDPOINT || 'http://tee2pee-sample-scheduler.herokuapp.com/'
   },
   auth: {
     strategies: {
@@ -104,7 +106,7 @@ export default {
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: 'http://localhost:3000/graphql',
+        httpEndpoint: (process.env.SERVER_ENDPOINT || 'http://tee2pee-sample-scheduler.herokuapp.com/') + 'graphql',
         getAuth: () => ''
       }
     }
