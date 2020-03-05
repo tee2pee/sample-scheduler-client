@@ -90,7 +90,7 @@ export default {
     port: 3030
   },
   axios: {
-    baseURL: process.env.SERVER_ENDPOINT || 'http://tee2pee-sample-scheduler.herokuapp.com/'
+    baseURL: process.env.SERVER_ENDPOINT || 'https://tee2pee-sample-scheduler.herokuapp.com/'
   },
   auth: {
     strategies: {
@@ -106,7 +106,7 @@ export default {
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: (process.env.SERVER_ENDPOINT || 'http://tee2pee-sample-scheduler.herokuapp.com/') + 'graphql',
+        httpEndpoint: (process.env.SERVER_ENDPOINT || 'https://tee2pee-sample-scheduler.herokuapp.com/') + 'graphql',
         getAuth: () => ''
       }
     }
