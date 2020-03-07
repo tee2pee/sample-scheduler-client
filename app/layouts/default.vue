@@ -64,7 +64,9 @@ v-app
     fixed
     app
   )
-    .text-center &copy; {{ new Date().getFullYear() }}
+    v-spacer
+    div &copy; {{ new Date().getFullYear() }} tee2pee
+    v-spacer
   v-overlay(
     :value="loading.show"
     :color="loading.color"
