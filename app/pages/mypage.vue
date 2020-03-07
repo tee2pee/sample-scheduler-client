@@ -76,7 +76,7 @@
         )
           v-select(
             v-model="scheduleDialog.calendarId"
-            :items="myInfo.calendars"
+            :items="myInfo.calendars || []"
             item-text="title"
             item-value="id"
             label="カレンダー"
@@ -97,7 +97,7 @@
         )
           ButtonDatePicker(
             v-model="scheduleDialog.frDate"
-            :type="'day'"
+            :type="scheduleDialog.frType"
             :locale="locale"
           )
           v-spacer
@@ -110,7 +110,7 @@
         )
           ButtonDatePicker(
             v-model="scheduleDialog.toDate"
-            :type="'day'"
+            :type="scheduleDialog.toType"
             :locale="locale"
           )
           v-spacer
@@ -152,7 +152,7 @@ export default {
   data () {
     return {
       // ログインユーザー情報
-      myInfo: 'xxx',
+      myInfo: {},
       // ロケール
       locale: 'ja',
       // カレンダー
@@ -169,6 +169,8 @@ export default {
         // 状態
         show: false,
         mode: null,
+        frType: 'date',
+        toType: 'date',
         // 入力項目
         scheduleId: -1,
         calendarId: -1,
@@ -204,7 +206,7 @@ export default {
       names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party']
     }
   },
-  created () {
+  beforeMount () {
     this.$nuxt.$emit('setPageTitle', 'マイページ')
     this.mountMyInfo()
   },

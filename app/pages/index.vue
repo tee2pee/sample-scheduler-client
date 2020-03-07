@@ -151,7 +151,7 @@ export default {
       }
     }
   },
-  created () {
+  beforeMount () {
     this.$nuxt.$emit('setPageTitle', 'ログイン')
   },
   methods: {
