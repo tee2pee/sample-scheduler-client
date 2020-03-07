@@ -124,10 +124,6 @@
           text
           @click="saveSchedule()"
         ) 保存
-  v-snackbar(
-    v-model="snackbar.show"
-    top
-  ) {{ snackbar.text }}
 </template>
 
 <script>
@@ -181,12 +177,6 @@ export default {
         toTime: '',
         // 画面イベントオブジェクト
         calendarEvent: null
-      },
-      // スナックバー
-      // FIXME: indexと共通化したい
-      snackbar: {
-        show: false,
-        text: ''
       },
       events: [],
       // dummy
@@ -251,9 +241,8 @@ export default {
         const res = await this.$apollo.query({ query: apolloMyInfo })
         this.myInfo = res.data.myInfo
       } catch (e) {
-        this.snackbar.text = 'ユーザー情報の取得に失敗しました。'
-        this.snackbar.show = true
         // window.console.log(e)
+        this.$nuxt.$emit('messaging', 'ユーザー情報の取得に失敗しました。')
       }
     },
     // FIXME: カレンダーで選択したときどうしよう
@@ -275,9 +264,8 @@ export default {
         }
         this.calendar.events = events
       } catch (e) {
-        this.snackbar.text = 'スケジュールの取得に失敗しました。'
-        this.snackbar.show = true
         // window.console.log(e)
+        this.$nuxt.$emit('messaging', 'スケジュールの取得に失敗しました。')
       }
     },
     showCreateEventModal ({ date }) {
@@ -364,9 +352,8 @@ export default {
         this.scheduleDialog.mode = null
         this.scheduleDialog.show = false
       } catch (e) {
-        this.snackbar.text = 'スケジュールの保存に失敗しました。'
-        this.snackbar.show = true
         // window.console.log(e)
+        this.$nuxt.$emit('messaging', 'スケジュールの保存に失敗しました。')
       }
     },
     async deleteSchedule () {
@@ -384,9 +371,8 @@ export default {
         this.scheduleDialog.mode = null
         this.scheduleDialog.show = false
       } catch (e) {
-        this.snackbar.text = 'スケジュールの削除に失敗しました。'
-        this.snackbar.show = true
         // window.console.log(e)
+        this.$nuxt.$emit('messaging', 'スケジュールの削除に失敗しました。')
       }
     },
     showDailySchedule ({ date }) {

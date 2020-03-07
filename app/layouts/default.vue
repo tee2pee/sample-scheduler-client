@@ -1,70 +1,74 @@
 <template lang="pug">
-  v-app
-    v-navigation-drawer(
-      v-model="sidebar"
-      :mobile-break-point="this.$vuetify.breakpoint.thresholds.sm"
-      clipped
-      fixed
-      app
+v-app
+  v-navigation-drawer(
+    v-model="sidebar"
+    :mobile-break-point="this.$vuetify.breakpoint.thresholds.sm"
+    clipped
+    fixed
+    app
+    v-if="!isLoginPage"
+  )
+    v-list
+      v-list-item(
+        v-for="(item, i) in items"
+        :key="i"
+        :to="item.to"
+        router
+        exact
+      )
+        v-list-item-action
+          v-icon {{ item.icon }}
+        v-list-item-content
+          v-list-item-title(
+            v-text="item.title"
+          )
+  v-app-bar(
+    clipped-left
+    fixed
+    app
+  )
+    v-app-bar-nav-icon(
+      @click.stop="sidebar = !sidebar"
+      v-if="!isLoginPage && !isLaptop"
+    )
+    v-spacer(
+      v-if="!isLaptop"
+    )
+    v-toolbar-title(
+      v-text="title"
+    )
+    v-spacer
+    v-menu(
+      left
+      bottom
       v-if="!isLoginPage"
     )
+      template(
+        v-slot:activator="{ on }"
+      )
+        v-btn(
+          icon
+          v-on="on"
+        )
+          v-icon mdi-dots-vertical
       v-list
         v-list-item(
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
+          v-if="isLoggedIn"
+          @click="logout()"
         )
-          v-list-item-action
-            v-icon {{ item.icon }}
-          v-list-item-content
-            v-list-item-title(
-              v-text="item.title"
-            )
-    v-app-bar(
-      clipped-left
-      fixed
-      app
-    )
-      v-app-bar-nav-icon(
-        @click.stop="sidebar = !sidebar"
-        v-if="!isLoginPage && !isLaptop"
-      )
-      v-spacer(
-        v-if="!isLaptop"
-      )
-      v-toolbar-title(
-        v-text="title"
-      )
-      v-spacer
-      v-menu(
-        left
-        bottom
-        v-if="!isLoginPage"
-      )
-        template(
-          v-slot:activator="{ on }"
-        )
-          v-btn(
-            icon
-            v-on="on"
-          )
-            v-icon mdi-dots-vertical
-        v-list
-          v-list-item(
-            v-if="isLoggedIn"
-            @click="logout()"
-          )
-            v-list-item-title ログアウト
-    v-content
-      v-container
-        nuxt
-    v-footer(
-      fixed
-      app
-    )
-      .text-center &copy; {{ new Date().getFullYear() }}
+          v-list-item-title ログアウト
+  v-content
+    v-container
+      nuxt
+  v-footer(
+    fixed
+    app
+  )
+    .text-center &copy; {{ new Date().getFullYear() }}
+  v-snackbar(
+    v-model="snackbar.show"
+    top
+  ) {{ snackbar.text }}
 </template>
 
 <script>
@@ -75,6 +79,11 @@ export default {
       title: '',
       // サイドバー表示ステータス
       sidebar: this.isLaptop,
+      // スナックバー
+      snackbar: {
+        show: false,
+        text: ''
+      },
       // dummy
       items: [
         // FIXME: カレンダー
@@ -95,6 +104,10 @@ export default {
   },
   created () {
     this.$nuxt.$on('setPageTitle', (title) => { this.title = title })
+    this.$nuxt.$on('messaging', (msg) => {
+      this.snackbar.text = msg
+      this.snackbar.show = true
+    })
   },
   computed: {
     isLoggedIn () {

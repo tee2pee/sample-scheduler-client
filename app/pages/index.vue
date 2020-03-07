@@ -110,10 +110,6 @@
               color="primary"
             ) ユーザー登録
             v-spacer
-  v-snackbar(
-    v-model="snackbar.show"
-    top
-  ) {{ snackbar.text }}
 </template>
 
 <script>
@@ -143,11 +139,6 @@ export default {
         email: '',
         password: '',
         password_confirmation: ''
-      },
-      // スナックバー
-      snackbar: {
-        show: false,
-        text: ''
       }
     }
   },
@@ -172,9 +163,8 @@ export default {
         this.$router.push('/mypage')
       } catch (e) {
         // ログイン失敗
-        this.snackbar.text = 'ログインに失敗しました。'
-        this.snackbar.show = true
         // window.console.log(e)
+        this.$nuxt.$emit('messaging', 'ログインに失敗しました。')
       }
     },
     async login () {
@@ -212,9 +202,8 @@ export default {
         this.signupDialog.show = false
       } catch (e) {
         // ユーザー登録失敗
-        this.snackbar.text = 'ユーザー登録に失敗しました。'
-        this.snackbar.show = true
         // window.console.log(e)
+        this.$nuxt.$emit('messaging', 'ユーザー登録に失敗しました。')
       }
     }
   }
