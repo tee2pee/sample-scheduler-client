@@ -173,16 +173,19 @@ export default {
         return false
       }
       // ログイン
+      this.$nuxt.$emit('loading')
       await this.loginCore(
         this.loginForm.email,
         this.loginForm.password
       )
+      this.$nuxt.$emit('loaded')
     },
     async signup () {
       // バリデーションNGの場合、処理終了
       if (!this.$refs.signupDialog.validate()) {
         return false
       }
+      this.$nuxt.$emit('loading')
       try {
         // ユーザー登録
         await this.$axios.$post('/signup', {
@@ -205,6 +208,7 @@ export default {
         // window.console.log(e)
         this.$nuxt.$emit('messaging', 'ユーザー登録に失敗しました。')
       }
+      this.$nuxt.$emit('loaded')
     }
   }
 }

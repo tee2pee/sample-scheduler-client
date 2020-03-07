@@ -306,6 +306,7 @@ export default {
       this.scheduleDialog.show = true
     },
     async saveSchedule () {
+      this.$nuxt.$emit('loading')
       try {
         let mutation
         const variables = {
@@ -355,8 +356,10 @@ export default {
         // window.console.log(e)
         this.$nuxt.$emit('messaging', 'スケジュールの保存に失敗しました。')
       }
+      this.$nuxt.$emit('loaded')
     },
     async deleteSchedule () {
+      this.$nuxt.$emit('loading')
       try {
         // FIXME: 確認ダイアログ
         await this.$apollo.mutate({
@@ -374,6 +377,7 @@ export default {
         // window.console.log(e)
         this.$nuxt.$emit('messaging', 'スケジュールの削除に失敗しました。')
       }
+      this.$nuxt.$emit('loaded')
     },
     showDailySchedule ({ date }) {
       // FIXME: 一旦デイリー表示は保留

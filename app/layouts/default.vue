@@ -65,6 +65,17 @@ v-app
     app
   )
     .text-center &copy; {{ new Date().getFullYear() }}
+  v-overlay(
+    :value="loading.show"
+    :color="loading.color"
+    :opacity="loading.opacity"
+    z-index="500"
+  )
+    v-progress-circular(
+      indeterminate
+      :color="loading.progcolor"
+      size="64"
+    )
   v-snackbar(
     v-model="snackbar.show"
     top
@@ -79,10 +90,17 @@ export default {
       title: '',
       // サイドバー表示ステータス
       sidebar: this.isLaptop,
+      // ローディング
+      loading: {
+        show: true,
+        color: 'white',
+        opacity: 1
+      },
       // スナックバー
       snackbar: {
         show: false,
-        text: ''
+        text: '',
+        progcolor: 'pink accent-2'
       },
       // dummy
       items: [
@@ -102,12 +120,24 @@ export default {
       ]
     }
   },
-  created () {
+  beforeMount () {
     this.$nuxt.$on('setPageTitle', (title) => { this.title = title })
     this.$nuxt.$on('messaging', (msg) => {
       this.snackbar.text = msg
       this.snackbar.show = true
     })
+    this.$nuxt.$on('loading', () => {
+      this.loading.color = 'black'
+      this.loading.opacity = 0.5
+      this.loading.progcolor = 'white'
+      this.loading.show = true
+    })
+    this.$nuxt.$on('loaded', () => {
+      this.loading.show = false
+    })
+  },
+  mounted () {
+    this.loading.show = false
   },
   computed: {
     isLoggedIn () {
